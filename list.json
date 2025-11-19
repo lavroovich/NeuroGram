@@ -1,0 +1,24 @@
+
+{
+    "deepseek": {
+        "model_id": "deepseek/deepseek-chat-v3.1:free",
+        "display_name": "DeepSeek 3.1"
+    },
+    "gpt":{
+        "model_id": "openai/gpt-oss-20b:free",
+        "display_name": "GPT Oss 20B"
+    },
+    "gemma":{
+        "model_id":"google/gemma-3-4b-it:free",
+        "display_name":"Gemma 3"
+    },
+    "qwen": {
+        "model_id":"qwen/qwen-2.5-72b-instruct:free",
+        "display_name": "Qwen 2.5"
+    },
+    "llama": {
+        "model_id": "meta-llama/llama-4-scout:free",
+        "display_name": "Llama 3 Scout"
+    }
+
+}
