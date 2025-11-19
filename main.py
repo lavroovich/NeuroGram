@@ -24,7 +24,7 @@ class MessagesUI(BoxLayout):
     
     def __init__(self,text,user = True, **argument):
         super().__init__(**argument)
-        self.oreitation = 'horizontal'
+        self.oreintation = 'horizontal'
         self.horizontalSize = dp(600)
         self.padding = [dp(10),dp(10)]
         
@@ -40,7 +40,7 @@ class MessagesUI(BoxLayout):
             self.rect = Rectangle(pos=self.pos, size=self.size)
         self.bind(pos=self.update_rect,size=self.update_rect)
         
-        textContainer=BoxLayout(orientation='vertical', size_hint_x=20)
+        textContainer=BoxLayout(oreintation='vertical', size_hint_x=20)
         messageLabel=Label(text=text, text_size=(Window.width * 0.5, None), size_hint_y=None,height=dp(70), halign=alignment, valign='middle', color="#69EC1DEF",markup=True)
         messageLabel.bind(texture_size=messageLabel.setter('size'))
         textContainer.add_widget(messageLabel)
@@ -64,13 +64,13 @@ class AppUI(App):
         self.chatbotAPI=networker.Networker()
     def frame(self):
         self.title='НейроГрам'
-        mainLayout=BoxLayout(orientation='vertical',spacing=0.1)
+        mainLayout=BoxLayout(oreintation='vertical',spacing=0.1)
         header=Label(text='НейроГрам 1.0 (Networker Client)', size_hint_y=None,height=dp(50), font_size=20,bold=True, color='#D7D7D7D7')
         
         mainLayout.add_widget(header)
         
         self.scroll = ScrollView(size_hint=(1,0.5), do_scroll_x=False)
-        self.chatLayout=BoxLayout(orientation='vertical',size_hint_y=None,spacing=dp(5))
+        self.chatLayout=BoxLayout(oreintation='vertical',size_hint_y=None,spacing=dp(5))
         self.chatLayout.bind(minimum_height=self.chatLayout.setter('height'))
         
         self.scroll.add_widget(self.chatLayout)
@@ -80,7 +80,7 @@ class AppUI(App):
         self.indicatorBar.opacity=0
         mainLayout.add_widget(self.indicatorBar)
         
-        self.inputLayout=BoxLayout(orientation='horizontal', size_hint_y=None, height=dp(50), spacing=dp(10))
+        self.inputLayout=BoxLayout(oreintation='horizontal', size_hint_y=None, height=dp(50), spacing=dp(10))
         self.messageInput=TextInput(hint_text='Напишите что нибудь...', size_hint_x=0.7,multiline=False)
         self.messageInput.bind(on_text_validate=self.sendMessage)
         
@@ -120,9 +120,6 @@ class AppUI(App):
             Clock.schedule_once(lambda dt: errorUI())
             
 if __name__ == '__main__':
-    Window.size = (400,400)
-    Window.minimum_width = 300
-    Window.minimum_height = 400
     AppUI().run()
         
         
