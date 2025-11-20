@@ -115,9 +115,10 @@ class AppUI(App):
         self.messageInput.text=''
         threading.Thread(target=self.get_response,args=(text,)).start()
         
-    def add_message_label(self,text):
-        message=Label(text=text, size_hint_y=None, height=dp(40), halign='left', markup=True, text_size=(None, None))
+    def add_message_label(self,text,user=True):
+        message=MessagesUI(text=text, user=user,size_hint_y=None, height=dp(30))
         self.chatLayout.add_widget(message)
+        Clock.schedule_once(lambda abcde123: self.scroll.to_button(),0.01)
         
     def get_response(self,text):
         try:
