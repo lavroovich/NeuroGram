@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 
 from kivy.app import App
+from kivy.core.text import LabelBase
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
@@ -20,13 +21,16 @@ import networker
 
 load_dotenv()
 
+LabelBase.register('Заголовок',fn_regular='fonts/Benzin-Bold.ttf')
+
 class MessagesUI(BoxLayout):
     
     def __init__(self,text,user = True, **argument):
         super().__init__(**argument)
-        self.oreintation = 'horizontal'
+        self.orientation = 'horizontal'
         self.horizontalSize = dp(600)
         self.padding = [dp(10),dp(10)]
+        self.size_hint_x = None
         
         if user:
             alignment='right'
@@ -40,7 +44,7 @@ class MessagesUI(BoxLayout):
             self.rect = Rectangle(pos=self.pos, size=self.size)
         self.bind(pos=self.update_rect,size=self.update_rect)
         
-        textContainer=BoxLayout(oreintation='vertical', size_hint_x=20)
+        textContainer=BoxLayout(orientation='vertical', size_hint_x=20)
         messageLabel=Label(text=text, text_size=(Window.width * 0.5, None), size_hint_y=None,height=dp(70), halign=alignment, valign='middle', color="#69EC1DEF",markup=True)
         messageLabel.bind(texture_size=messageLabel.setter('size'))
         textContainer.add_widget(messageLabel)
@@ -53,7 +57,7 @@ class MessagesUI(BoxLayout):
             self.add_widget(textContainer)
             self.add_widget(Label(size_hint_x=0.1))
         
-    def update(self,*args):
+    def update_rect(self,*args):
         self.rect.pos=self.pos
         self.rect.size=self.size
         
@@ -62,15 +66,15 @@ class AppUI(App):
         super().__init__(**kwargs)
         self.loading=True
         self.chatbotAPI=networker.Networker()
-    def frame(self):
+    def build(self):
         self.title='НейроГрам'
-        mainLayout=BoxLayout(oreintation='vertical',spacing=0.1)
-        header=Label(text='НейроГрам 1.0 (Networker Client)', size_hint_y=None,height=dp(50), font_size=20,bold=True, color='#D7D7D7D7')
+        mainLayout=BoxLayout(orientation='vertical',spacing=0.1)
+        header=Label(text='НейроГрам 1.0 (Networker Client)', size_hint_y=None,height=dp(50), font_size=50,bold=True, color='#D7D7D7D7', font_name='Заголовок')
         
         mainLayout.add_widget(header)
         
         self.scroll = ScrollView(size_hint=(1,0.5), do_scroll_x=False)
-        self.chatLayout=BoxLayout(oreintation='vertical',size_hint_y=None,spacing=dp(5))
+        self.chatLayout=BoxLayout(orientation='vertical',size_hint_y=None,spacing=dp(5))
         self.chatLayout.bind(minimum_height=self.chatLayout.setter('height'))
         
         self.scroll.add_widget(self.chatLayout)
@@ -80,7 +84,7 @@ class AppUI(App):
         self.indicatorBar.opacity=0
         mainLayout.add_widget(self.indicatorBar)
         
-        self.inputLayout=BoxLayout(oreintation='horizontal', size_hint_y=None, height=dp(50), spacing=dp(10))
+        self.inputLayout=BoxLayout(orientation='horizontal', size_hint_y=None, height=dp(50), spacing=dp(10))
         self.messageInput=TextInput(hint_text='Напишите что нибудь...', size_hint_x=0.7,multiline=False)
         self.messageInput.bind(on_text_validate=self.sendMessage)
         
@@ -93,15 +97,22 @@ class AppUI(App):
         self.inputLayout.add_widget(self.messageInput)
         self.inputLayout.add_widget(self.clearBtn)
         self.inputLayout.add_widget(self.sendBtn)
+
+        return mainLayout
         
         mainLayout.add_widget(self.inputLayout)
+
+    def clear_chat(self,instance=None):
+        self.chatLayout.clear_widgets()
+        self.chatbotAPI.snap()
+        
     
-    def sendMessage(self):
-        text=self.input.text
+    def sendMessage(self,instance=None):
+        text=self.messageInput.text
         if not text:
             return
         self.add_message_label(text)
-        self.input.text=''
+        self.messageInput.text=''
         threading.Thread(target=self.get_response,args=(text,)).start()
         
     def add_message_label(self,text):

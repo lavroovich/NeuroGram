@@ -42,8 +42,12 @@ class Networker:
         self.chat.insert(0,{"role":"system","content":content})
         print('🥷 Установлен системный промпт')
     
-    def snap(self): #сносит историю чата
-        self.chat=[]
+    def snap(self,save_system_prompt=False): #сносит историю чата
+        if not save_system_prompt:
+            self.chat=[]
+            print('🗑️ Чат удалён вместе с системным промптом')
+        else:
+            pass
     
     def set_model(self,model):
         self.model=model
@@ -52,7 +56,6 @@ class Networker:
     def message(self, content):
         if self.model in ['',' ', 'null']:
             raise ValueError('Отправка сообщения невозможна без выбранной модели')
-        
         
         self.chat.append({"role":"user","content":content})
         completion=self.apiClient.chat.completions.create(
